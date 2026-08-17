@@ -274,6 +274,7 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
 
   Widget get _chatStreamBuilder {
     var lastMatchedDate = DateTime.now();
+
     return StreamBuilder<List<Message>>(
       stream: chatController?.messageStreamController.stream,
       builder: (context, snapshot) {
@@ -287,6 +288,10 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
           final messages = chatBackgroundConfig.sortEnable
               ? sortMessage(data)
               : data.reversed.toList();
+
+          if (messages.isNotEmpty) {
+            lastMatchedDate = messages.last.createdAt;
+          }
 
           final enableSeparator =
               featureActiveConfig?.enableChatSeparator ?? false;
