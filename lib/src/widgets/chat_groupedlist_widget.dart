@@ -375,6 +375,14 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
                   /// so that we'll get actual index to display message in chat
                   var newIndex = index - (separatorCounts[index] ?? 0);
 
+                  // 防御：日期分隔符计数与消息列表长度不一致时（例如翻页加载追加了
+                  // loading 项导致 itemCount 变化、或 messages 与分隔符映射错位），
+                  // newIndex 可能越界。越界时返回空占位，避免整列表渲染抛 RangeError
+                  // 而出现灰色空白背景（列表渲染失败，露出底层视图背景）。
+                  if (newIndex < 0 || newIndex >= messages.length) {
+                    return const SizedBox.shrink();
+                  }
+
                   final messageChild = ValueListenableBuilder<String?>(
                     valueListenable: _replyId,
                     builder: (context, state, child) {
