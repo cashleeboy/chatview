@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:chatview/chatview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:audio_waveforms/audio_waveforms.dart';
 
 import '../../values/colors.dart';
 import '../../values/icons.dart';
@@ -26,9 +23,7 @@ class CustomChatBar extends StatefulWidget {
 }
 
 class _CustomChatBarState extends State<CustomChatBar> {
-  RecorderController? controller;
   late ReplyMessage? _replyMessage = widget.replyMessage;
-  final voiceRecordingConfig = const VoiceRecordingConfiguration();
   final isRecording = ValueNotifier(false);
   final _focusNode = FocusNode();
   final _textController = TextEditingController();
@@ -37,9 +32,7 @@ class _CustomChatBarState extends State<CustomChatBar> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-      controller = RecorderController();
-    }
+
     _textController.addListener(_onTextChanged);
   }
 
@@ -144,57 +137,30 @@ class _CustomChatBarState extends State<CustomChatBar> {
                         ),
                         child: Row(
                           children: [
-                            if (isRecordingValue &&
-                                controller != null &&
-                                !kIsWeb)
-                              Expanded(
-                                child: AudioWaveforms(
-                                  size: const Size(double.maxFinite, 50),
-                                  recorderController: controller!,
-                                  margin: voiceRecordingConfig.margin,
-                                  padding: voiceRecordingConfig.padding ??
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  decoration: voiceRecordingConfig.decoration ??
-                                      BoxDecoration(
-                                        color: voiceRecordingConfig
-                                            .backgroundColor,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                  waveStyle: voiceRecordingConfig.waveStyle ??
-                                      WaveStyle(
-                                        extendWaveform: true,
-                                        showMiddleLine: false,
-                                        waveColor: voiceRecordingConfig
-                                                .waveStyle?.waveColor ??
-                                            Colors.black,
-                                      ),
+                            Expanded(
+                              child: TextField(
+                                maxLines: null,
+                                focusNode: _focusNode,
+                                controller: _textController,
+                                textAlignVertical: TextAlignVertical.bottom,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  letterSpacing: -0.02,
+                                  fontWeight: FontWeight.w400,
                                 ),
-                              )
-                            else
-                              Expanded(
-                                child: TextField(
-                                  maxLines: null,
-                                  focusNode: _focusNode,
-                                  controller: _textController,
-                                  textAlignVertical: TextAlignVertical.bottom,
-                                  style: const TextStyle(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                  border: InputBorder.none,
+                                  contentPadding:
+                                      EdgeInsets.fromLTRB(10, 4, 16, 4),
+                                  hintStyle: TextStyle(
+                                    color: Color(0xFF999999),
                                     fontSize: 16,
-                                    letterSpacing: -0.02,
-                                    fontWeight: FontWeight.w400,
                                   ),
-                                  decoration: const InputDecoration(
-                                    isDense: true,
-                                    border: InputBorder.none,
-                                    contentPadding:
-                                        EdgeInsets.fromLTRB(10, 4, 16, 4),
-                                    hintStyle: TextStyle(
-                                      color: Color(0xFF999999),
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  onSubmitted: (_) => _sendMessage(),
                                 ),
+                                onSubmitted: (_) => _sendMessage(),
                               ),
+                            ),
                             if (!isRecordingValue) ...[
                               SizedBox.square(
                                 dimension: 24,
@@ -339,16 +305,6 @@ class _CustomChatBarState extends State<CustomChatBar> {
 
   Future<void> _cancelRecording() async {
     if (!isRecording.value) return;
-    final path = await controller?.stop();
-    if (path == null) {
-      isRecording.value = false;
-      return;
-    }
-    final file = File(path);
-
-    if (await file.exists()) {
-      await file.delete();
-    }
 
     isRecording.value = false;
   }
@@ -374,25 +330,7 @@ class _CustomChatBarState extends State<CustomChatBar> {
 
   Future<void> _recordOrStop() async {
     if (!isRecording.value) {
-      await controller?.record(
-        recorderSettings: voiceRecordingConfig.recorderSettings,
-      );
       isRecording.value = true;
-    } else {
-      final path = await controller?.stop();
-      isRecording.value = false;
-      if (path?.isEmpty ?? true) return;
-      if (mounted) ChatView.closeReplyMessageView(context);
-      widget.chatController.addMessage(
-        Message(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          message: path!,
-          createdAt: DateTime.now(),
-          messageType: MessageType.voice,
-          replyMessage: _replyMessage ?? const ReplyMessage(),
-          sentBy: widget.chatController.currentUser.id,
-        ),
-      );
     }
   }
 }

@@ -610,19 +610,6 @@ class _ExampleOneChatScreenState extends State<ExampleOneChatScreen> {
             replyDialogColor: _theme.backgroundColor,
             defaultSendButtonColor: Colors.white,
             textFieldBackgroundColor: _theme.textField,
-            voiceRecordingConfiguration: VoiceRecordingConfiguration(
-              recorderIconColor: _theme.iconColor,
-              waveStyle: WaveStyle(
-                extendWaveform: true,
-                showMiddleLine: false,
-                waveColor: _theme.iconColor,
-                durationLinesColor: AppColors.black20,
-                backgroundColor: Colors.transparent,
-                scaleFactor: 60,
-                waveThickness: 3,
-                spacing: 4,
-              ),
-            ),
             sendButtonStyle: IconButton.styleFrom(
               backgroundColor: AppColors.uiOnePurple,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -804,22 +791,6 @@ class _ExampleOneChatScreenState extends State<ExampleOneChatScreen> {
                 Icons.pause_rounded,
                 size: 24,
                 color: isMessageBySender ? Colors.white : _theme.iconColor,
-              ),
-              inComingPlayerWaveStyle: PlayerWaveStyle(
-                liveWaveColor: _theme.iconColor,
-                fixedWaveColor: AppColors.black20,
-                backgroundColor: Colors.transparent,
-                scaleFactor: 60,
-                waveThickness: 3,
-                spacing: 4,
-              ),
-              outgoingPlayerWaveStyle: PlayerWaveStyle(
-                liveWaveColor: _theme.iconColor,
-                fixedWaveColor: AppColors.white20,
-                backgroundColor: Colors.transparent,
-                scaleFactor: 60,
-                waveThickness: 3,
-                spacing: 4,
               ),
             ),
             messageReactionConfig: MessageReactionConfiguration(

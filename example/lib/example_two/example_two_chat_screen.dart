@@ -10,7 +10,6 @@ import '../values/colors.dart';
 import '../values/icons.dart';
 import '../values/images.dart';
 import '../widgets/custom_chat_bar.dart';
-import '../widgets/reply_message_tile.dart';
 
 class ExampleTwoChatScreen extends StatefulWidget {
   const ExampleTwoChatScreen({required this.chat, super.key});
@@ -233,22 +232,6 @@ class _ExampleTwoChatScreenState extends State<ExampleTwoChatScreen> {
               size: 38,
               color: Color(0xff767779),
             ),
-            inComingPlayerWaveStyle: const PlayerWaveStyle(
-              liveWaveColor: Color(0xff000000),
-              fixedWaveColor: Color(0x33000000),
-              backgroundColor: Colors.transparent,
-              scaleFactor: 60,
-              waveThickness: 3,
-              spacing: 4,
-            ),
-            outgoingPlayerWaveStyle: const PlayerWaveStyle(
-              liveWaveColor: Color(0xff000000),
-              fixedWaveColor: Color(0x33000000),
-              backgroundColor: Colors.transparent,
-              scaleFactor: 60,
-              waveThickness: 3,
-              spacing: 4,
-            ),
           ),
           messageReactionConfig: MessageReactionConfiguration(
             backgroundColor: Colors.white,
@@ -273,10 +256,6 @@ class _ExampleTwoChatScreenState extends State<ExampleTwoChatScreen> {
           backgroundColor: Colors.grey.shade100,
           verticalBarColor: const Color(0xFF128C7E),
           loadOldReplyMessage: (messageId) async {},
-          repliedMessageWidgetBuilder: (replyMessage) => ReplyMessageTile(
-            replyMessage: replyMessage,
-            chatController: _chatController,
-          ),
         ),
 
         // Swipe to reply configuration
