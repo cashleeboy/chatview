@@ -1,4 +1,3 @@
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 
 import '../models/models.dart';
@@ -16,7 +15,6 @@ class ConfigurationsInheritedWidget extends InheritedWidget {
     this.swipeToReplyConfig,
     this.repliedMessageConfig,
     this.replyPopupConfig,
-    this.emojiPickerSheetConfig,
     this.scrollToBottomButtonConfig,
   }) : super(key: key, child: child);
 
@@ -48,9 +46,6 @@ class ConfigurationsInheritedWidget extends InheritedWidget {
 
   /// Provides configuration for reply snack bar's appearance and options.
   final ReplyPopupConfiguration? replyPopupConfig;
-
-  /// Configuration for emoji picker sheet
-  final Config? emojiPickerSheetConfig;
 
   /// Provides a configuration for scroll to bottom button config
   final ScrollToBottomButtonConfig? scrollToBottomButtonConfig;

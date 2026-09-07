@@ -1,12 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
-import '../../../chatview.dart' show ChatView;
 import '../../models/config_models/send_message_configuration.dart';
-import '../../utils/helper.dart';
 import '../../values/typedefs.dart';
 import 'text_field_action_button.dart';
 
@@ -20,33 +16,7 @@ class GalleryActionButton extends TextFieldActionButton {
     super.color,
     super.style,
   }) : super(
-          onPressed: onPressed == null
-              ? null
-              : (context) async {
-                  final primaryFocus = FocusManager.instance.primaryFocus;
-                  final hasFocus = primaryFocus?.hasFocus ?? false;
-                  primaryFocus?.unfocus();
-                  final path = await onMediaActionButtonPressed(
-                    ImageSource.gallery,
-                    config: imagePickerConfiguration,
-                  );
-                  // To maintain the iOS native behavior of text field,
-                  // When the user taps on the gallery icon, and the text field
-                  // has focus, the keyboard should close.
-                  // We need to request focus again to open the keyboard.
-                  // This is not required for Android.
-                  // This is a workaround for the issue where the keyboard
-                  // remain open and overlaps the text field.
-
-                  // https://github.com/SimformSolutionsPvtLtd/chatview/issues/266
-                  if (!kIsWeb && Platform.isIOS && hasFocus) {
-                    primaryFocus?.requestFocus();
-                  }
-                  final replyMessage = context.mounted
-                      ? ChatView.getReplyMessage(context)
-                      : null;
-                  onPressed.call(path, replyMessage);
-                },
+          onPressed: onPressed == null ? null : (context) async {},
         );
 
   final ImagePickerConfiguration? imagePickerConfiguration;

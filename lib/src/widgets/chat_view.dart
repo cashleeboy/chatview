@@ -62,7 +62,6 @@ class ChatView extends StatefulWidget {
     ChatViewStateConfiguration? chatViewStateConfig,
     this.featureActiveConfig = const FeatureActiveConfig(),
     this.sendMessageConfig = const SendMessageConfiguration(),
-    this.emojiPickerSheetConfig,
     this.replyMessageBuilder,
     this.replySuggestionsConfig,
     this.scrollToBottomButtonConfig,
@@ -140,9 +139,6 @@ class ChatView extends StatefulWidget {
 
   /// Provides callback when user tap on chat list.
   final VoidCallback? onChatListTap;
-
-  /// Configuration for emoji picker sheet
-  final Config? emojiPickerSheetConfig;
 
   /// Suggestion Item Config
   final ReplySuggestionsConfig? replySuggestionsConfig;
@@ -258,7 +254,6 @@ class _ChatViewState extends State<ChatView>
           profileCircleConfig: widget.profileCircleConfig,
           repliedMessageConfig: widget.repliedMessageConfig,
           swipeToReplyConfig: widget.swipeToReplyConfig,
-          emojiPickerSheetConfig: widget.emojiPickerSheetConfig,
           scrollToBottomButtonConfig: widget.scrollToBottomButtonConfig,
           child: Builder(
             builder: (context) => Stack(

@@ -31,7 +31,6 @@ import '../models/config_models/send_message_configuration.dart';
 import '../utils/constants/constants.dart';
 import '../values/typedefs.dart';
 import 'chatui_textfield.dart';
-import 'reply_message_view.dart';
 import 'scroll_to_bottom_button.dart';
 import 'selected_image_view_widget.dart';
 
@@ -68,9 +67,6 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
   final _textEditingController = TextEditingController();
 
   final _focusNode = FocusNode();
-
-  final GlobalKey<ReplyMessageViewState> _replyMessageTextFieldViewKey =
-      GlobalKey();
 
   final GlobalKey<SelectedImageViewWidgetState> _selectedImageViewWidgetKey =
       GlobalKey();
@@ -158,13 +154,6 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
-                              ReplyMessageView(
-                                key: _replyMessageTextFieldViewKey,
-                                sendMessageConfig: widget.sendMessageConfig,
-                                messageConfig: widget.messageConfig,
-                                builder: widget.replyMessageBuilder,
-                                onChange: (value) => _replyMessage = value,
-                              ),
                               if (widget
                                   .sendMessageConfig.shouldSendImageWithText)
                                 SelectedImageViewWidget(
@@ -265,24 +254,9 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
       messageId: message.id,
       voiceMessageDuration: message.voiceMessageDuration,
     );
-
-    if (_replyMessageTextFieldViewKey.currentState == null) {
-      setState(() {});
-    } else {
-      _replyMessageTextFieldViewKey.currentState!.replyMessage.value =
-          _replyMessage;
-    }
   }
 
-  void onCloseTap() {
-    if (_replyMessageTextFieldViewKey.currentState == null) {
-      setState(() {
-        _replyMessage = const ReplyMessage();
-      });
-    } else {
-      _replyMessageTextFieldViewKey.currentState?.onClose();
-    }
-  }
+  void onCloseTap() {}
 
   double get _bottomPadding => (!kIsWeb && Platform.isIOS)
       ? (_focusNode.hasFocus

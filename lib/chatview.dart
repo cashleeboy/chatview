@@ -22,15 +22,6 @@
 
 library chatview;
 
-export 'package:audio_waveforms/audio_waveforms.dart'
-    show
-        AndroidEncoder,
-        AndroidEncoderSettings,
-        IosEncoder,
-        IosEncoderSetting,
-        PlayerWaveStyle,
-        RecorderSettings,
-        WaveStyle;
 export 'package:chatview_utils/chatview_utils.dart'
     hide
         AutoAnimateItemExtractor,
@@ -41,7 +32,6 @@ export 'package:chatview_utils/chatview_utils.dart'
         Omit,
         PinStatusExtension,
         UserActiveStatusExtension;
-export 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 export 'src/extensions/extensions.dart' show MessageTypes;
 export 'src/models/models.dart';

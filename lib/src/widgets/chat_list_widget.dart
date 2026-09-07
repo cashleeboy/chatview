@@ -74,9 +74,21 @@ class ChatListWidgetState extends State<ChatListWidget> {
 
   List<Message> get messageList => chatController.initialMessageList;
 
-  /// 使用 chatController.scrollController（由外部传入的 AutoScrollController）
-  AutoScrollController get autoScrollController =>
-      chatController.scrollController as AutoScrollController;
+  /// 使用 chatController.scrollController。
+  /// 约定：外部（base_chat_page）必须传入 AutoScrollController 以支持「滚动到指定消息」。
+  /// 防御式处理：若外部误传普通 ScrollController，这里安全降级，避免强转崩溃整个聊天列表
+  /// （此时 scrollToIndex 不可用，但列表仍可正常渲染、不白屏）。
+  AutoScrollController get autoScrollController {
+    final sc = chatController.scrollController;
+    if (sc is AutoScrollController) return sc;
+    // 兜底：构造一个独立的 AutoScrollController 保证渲染不崩溃。
+    // 注意该兜底控制器不与真实列表绑定，scrollToIndex 将失效；
+    // 根本修复是外部始终传入 AutoScrollController。
+    return _fallbackAutoScrollController ??=
+        AutoScrollController(axis: Axis.vertical);
+  }
+
+  AutoScrollController? _fallbackAutoScrollController;
 
   FeatureActiveConfig? featureActiveConfig;
   ChatUser? currentUser;

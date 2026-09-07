@@ -20,20 +20,16 @@
  * SOFTWARE.
  */
 import 'dart:async';
-import 'dart:io' show File, Platform;
 
-import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:chatview_utils/chatview_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../extensions/extensions.dart';
 import '../models/config_models/send_message_configuration.dart';
 import '../utils/constants/constants.dart';
 import '../utils/debounce.dart';
 import '../utils/package_strings.dart';
-import '../values/enumeration.dart';
 import '../values/typedefs.dart';
 import 'action_widgets/camera_action_button.dart';
 import 'action_widgets/gallery_action_button.dart';
@@ -76,18 +72,11 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
   late final ValueNotifier<bool> _isTextNotEmptyNotifier =
       ValueNotifier(widget.textEditingController.text.isNotEmpty);
 
-  RecorderController? controller;
-
-  final playerController = PlayerController();
-
   ValueNotifier<bool> isRecording = ValueNotifier(false);
 
   bool Function(KeyEvent)? _keyboardHandler;
 
   SendMessageConfiguration get sendMessageConfig => widget.sendMessageConfig;
-
-  VoiceRecordingConfiguration get voiceRecordingConfig =>
-      widget.sendMessageConfig.voiceRecordingConfiguration;
 
   ImagePickerIconsConfiguration? get imagePickerIconsConfig =>
       sendMessageConfig.imagePickerIconsConfig;
@@ -120,9 +109,6 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
             const Duration(seconds: 1));
     super.initState();
 
-    if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-      controller = RecorderController();
-    }
     if (kIsWeb) {
       if (_attachHardwareKeyboardHandler() case final handler) {
         _keyboardHandler = handler;
@@ -141,7 +127,6 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
       HardwareKeyboard.instance.removeHandler(handler);
     }
     widget.textEditingController.removeListener(_listenTextEditingController);
-    playerController.dispose();
     super.dispose();
   }
 
@@ -210,96 +195,70 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
         builder: (_, isRecordingValue, child) {
           return Row(
             children: [
-              if (isRecordingValue && controller != null && !kIsWeb)
-                Expanded(
-                  child: AudioWaveforms(
-                    size: const Size(double.maxFinite, 50),
-                    recorderController: controller!,
-                    margin: voiceRecordingConfig.margin,
-                    padding: voiceRecordingConfig.padding ??
-                        EdgeInsets.symmetric(
-                          horizontal: cancelRecordConfiguration == null ? 8 : 5,
-                        ),
-                    decoration: voiceRecordingConfig.decoration ??
-                        BoxDecoration(
-                          color: voiceRecordingConfig.backgroundColor,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                    waveStyle: voiceRecordingConfig.waveStyle ??
-                        WaveStyle(
-                          extendWaveform: true,
-                          showMiddleLine: false,
-                          waveColor:
-                              voiceRecordingConfig.waveStyle?.waveColor ??
-                                  Colors.black,
-                        ),
-                  ),
-                )
-              else
-                Expanded(
-                  child: Row(
-                    children: [
-                      ValueListenableBuilder(
-                        valueListenable: _isTextNotEmptyNotifier,
-                        builder: (context, isNotEmpty, _) {
-                          final hideLeadingActions =
-                              (textFieldConfig?.hideLeadingActionsOnType ??
-                                      false) &&
-                                  isNotEmpty;
-                          if (hideLeadingActions) {
-                            return const SizedBox.shrink();
-                          }
-                          final actions = textFieldConfig?.leadingActions?.call(
-                            context,
-                            widget.textEditingController,
-                          );
-                          return actions == null
-                              ? const SizedBox.shrink()
-                              : Row(children: actions);
-                        },
-                      ),
-                      Expanded(
-                        child: TextField(
-                          focusNode: widget.focusNode,
-                          controller: widget.textEditingController,
-                          style: textFieldConfig?.textStyle ??
-                              const TextStyle(color: Colors.white),
-                          maxLines: textFieldConfig?.maxLines ?? 5,
-                          minLines: textFieldConfig?.minLines ?? 1,
-                          keyboardType: textFieldConfig?.textInputType,
-                          inputFormatters: textFieldConfig?.inputFormatters,
-                          enabled: textFieldConfig?.enabled,
-                          textCapitalization:
-                              textFieldConfig?.textCapitalization ??
-                                  TextCapitalization.sentences,
-                          decoration: InputDecoration(
-                            hintText: textFieldConfig?.hintText ??
-                                PackageStrings.currentLocale.message,
-                            fillColor:
-                                sendMessageConfig.textFieldBackgroundColor ??
-                                    Colors.white,
-                            filled: true,
-                            hintMaxLines: textFieldConfig?.hintMaxLines ?? 1,
-                            hintStyle: textFieldConfig?.hintStyle ??
-                                TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.grey.shade600,
-                                  letterSpacing: 0.25,
-                                ),
-                            contentPadding: textFieldConfig?.contentPadding ??
-                                const EdgeInsets.symmetric(horizontal: 6),
-                            border: outlineBorder,
-                            focusedBorder: outlineBorder,
-                            enabledBorder: outlineBorder,
-                            disabledBorder: outlineBorder,
-                          ),
+              Expanded(
+                child: Row(
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: _isTextNotEmptyNotifier,
+                      builder: (context, isNotEmpty, _) {
+                        final hideLeadingActions =
+                            (textFieldConfig?.hideLeadingActionsOnType ??
+                                    false) &&
+                                isNotEmpty;
+                        if (hideLeadingActions) {
+                          return const SizedBox.shrink();
+                        }
+                        final actions = textFieldConfig?.leadingActions?.call(
+                          context,
+                          widget.textEditingController,
+                        );
+                        return actions == null
+                            ? const SizedBox.shrink()
+                            : Row(children: actions);
+                      },
+                    ),
+                    Expanded(
+                      child: TextField(
+                        focusNode: widget.focusNode,
+                        controller: widget.textEditingController,
+                        style: textFieldConfig?.textStyle ??
+                            const TextStyle(color: Colors.white),
+                        maxLines: textFieldConfig?.maxLines ?? 5,
+                        minLines: textFieldConfig?.minLines ?? 1,
+                        keyboardType: textFieldConfig?.textInputType,
+                        inputFormatters: textFieldConfig?.inputFormatters,
+                        enabled: textFieldConfig?.enabled,
+                        textCapitalization:
+                            textFieldConfig?.textCapitalization ??
+                                TextCapitalization.sentences,
+                        decoration: InputDecoration(
+                          hintText: textFieldConfig?.hintText ??
+                              PackageStrings.currentLocale.message,
+                          fillColor:
+                              sendMessageConfig.textFieldBackgroundColor ??
+                                  Colors.white,
+                          filled: true,
+                          hintMaxLines: textFieldConfig?.hintMaxLines ?? 1,
+                          hintStyle: textFieldConfig?.hintStyle ??
+                              TextStyle(
+                                overflow: TextOverflow.ellipsis,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey.shade600,
+                                letterSpacing: 0.25,
+                              ),
+                          contentPadding: textFieldConfig?.contentPadding ??
+                              const EdgeInsets.symmetric(horizontal: 6),
+                          border: outlineBorder,
+                          focusedBorder: outlineBorder,
+                          enabledBorder: outlineBorder,
+                          disabledBorder: outlineBorder,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
               ValueListenableBuilder<bool>(
                 valueListenable: _isTextNotEmptyNotifier,
                 builder: (_, isNotEmpty, child) {
@@ -356,24 +315,6 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
                                               ),
                                 ),
                               ],
-
-                        // Always add the voice button at the end if allowed
-                        if ((sendMessageConfig.allowRecordingVoice) &&
-                            !kIsWeb &&
-                            (Platform.isIOS || Platform.isAndroid))
-                          IconButton(
-                            onPressed: (textFieldConfig?.enabled ?? true)
-                                ? _recordOrStop
-                                : null,
-                            icon: (isRecordingValue
-                                    ? voiceRecordingConfig.stopIcon
-                                    : voiceRecordingConfig.micIcon) ??
-                                Icon(
-                                  isRecordingValue ? Icons.stop : Icons.mic,
-                                  color: voiceRecordingConfig.recorderIconColor,
-                                ),
-                          ),
-
                         if (isRecordingValue &&
                             cancelRecordConfiguration != null)
                           IconButton(
@@ -383,8 +324,7 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
                             },
                             icon: cancelRecordConfiguration?.icon ??
                                 const Icon(Icons.cancel_outlined),
-                            color: cancelRecordConfiguration?.iconColor ??
-                                voiceRecordingConfig.recorderIconColor,
+                            color: cancelRecordConfiguration?.iconColor,
                           ),
                       ],
                     );
@@ -404,47 +344,9 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
   }
 
   FutureOr<void> _cancelRecording() async {
-    assert(
-      defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android,
-      'Voice messages are only supported with android and ios platform',
-    );
     if (!isRecording.value) return;
-    final path = await controller?.stop();
-    if (path == null) {
-      isRecording.value = false;
-      return;
-    }
-    final file = File(path);
-
-    if (await file.exists()) {
-      await file.delete();
-    }
 
     isRecording.value = false;
-  }
-
-  Future<void> _recordOrStop() async {
-    assert(
-      defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android,
-      'Voice messages are only supported with android and ios platform',
-    );
-    if (!isRecording.value) {
-      if (chatListConfig
-              .messageConfig?.voiceMessageConfig?.playerMode.isSingle ??
-          false) {
-        playerController.pauseAllPlayers();
-      }
-      await controller?.record(
-        recorderSettings: voiceRecordingConfig.recorderSettings,
-      );
-      isRecording.value = true;
-    } else {
-      final path = await controller?.stop();
-      isRecording.value = false;
-      widget.onRecordingComplete(path);
-    }
   }
 
   void _listenTextEditingController() {

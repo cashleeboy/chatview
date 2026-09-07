@@ -21,14 +21,12 @@
  */
 import 'dart:io';
 
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 class EmojiPickerWidget extends StatelessWidget {
   const EmojiPickerWidget({
     required this.onSelected,
-    this.emojiPickerSheetConfig,
     this.height,
     super.key,
   });
@@ -37,7 +35,6 @@ class EmojiPickerWidget extends StatelessWidget {
   final ValueSetter<String> onSelected;
 
   /// Configuration for emoji picker sheet
-  final Config? emojiPickerSheetConfig;
 
   /// Height of the emoji picker sheet.
   final double? height;
@@ -48,8 +45,6 @@ class EmojiPickerWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
       decoration: BoxDecoration(
-        color: emojiPickerSheetConfig?.emojiViewConfig.backgroundColor ??
-            Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       ),
       height: height ?? size.height * 0.6,
@@ -63,32 +58,6 @@ class EmojiPickerWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.grey,
               borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-          Expanded(
-            child: EmojiPicker(
-              onEmojiSelected: (Category? category, Emoji emoji) =>
-                  onSelected(emoji.emoji),
-              config: emojiPickerSheetConfig ??
-                  Config(
-                    emojiViewConfig: EmojiViewConfig(
-                      columns: 7,
-                      emojiSizeMax:
-                          32 * ((!kIsWeb && Platform.isIOS) ? 1.30 : 1.0),
-                      backgroundColor: Colors.white,
-                    ),
-                    searchViewConfig: const SearchViewConfig(
-                      buttonIconColor: Colors.black,
-                    ),
-                    categoryViewConfig: const CategoryViewConfig(
-                      recentTabBehavior: RecentTabBehavior.NONE,
-                    ),
-                    bottomActionBarConfig: const BottomActionBarConfig(
-                      backgroundColor: Colors.white,
-                      buttonIconColor: Colors.black,
-                      buttonColor: Colors.white,
-                    ),
-                  ),
             ),
           ),
         ],

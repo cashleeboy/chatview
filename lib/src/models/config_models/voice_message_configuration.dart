@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 
 import '../../values/enumeration.dart';
@@ -29,11 +28,6 @@ import '../../values/typedefs.dart';
 /// A configuration model class for voice message bubble.
 class VoiceMessageConfiguration {
   const VoiceMessageConfiguration({
-    @Deprecated(
-        'Use `outgoingPlayerWaveStyle`/`inComingPlayerWaveStyle` instead.')
-    this.playerWaveStyle,
-    this.outgoingPlayerWaveStyle,
-    this.inComingPlayerWaveStyle,
     this.padding = const EdgeInsets.symmetric(horizontal: 8),
     this.margin,
     this.decoration,
@@ -46,18 +40,6 @@ class VoiceMessageConfiguration {
     this.enableSeekGesture = true,
     this.playerMode = PlayerMode.multi,
   });
-
-  /// Applies style to waveform.
-  ///
-  /// **Note:** if both [playerWaveStyle] and [outgoingPlayerWaveStyle]/[inComingPlayerWaveStyle] are provided,
-  /// then [outgoingPlayerWaveStyle]/[inComingPlayerWaveStyle] will take precedence.
-  final PlayerWaveStyle? playerWaveStyle;
-
-  /// Applies style to outgoing waveform.
-  final PlayerWaveStyle? outgoingPlayerWaveStyle;
-
-  /// Applies style to incoming waveform.
-  final PlayerWaveStyle? inComingPlayerWaveStyle;
 
   /// Applies padding to message bubble.
   final EdgeInsets padding;

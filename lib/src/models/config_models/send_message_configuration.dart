@@ -20,17 +20,14 @@
  * SOFTWARE.
  */
 
-import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:chatview_utils/chatview_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../values/typedefs.dart';
 
 class SendMessageConfiguration {
   const SendMessageConfiguration({
-    this.voiceRecordingConfiguration = const VoiceRecordingConfiguration(),
     this.shouldSendImageWithText = false,
     this.allowRecordingVoice = true,
     this.textFieldConfig,
@@ -90,9 +87,6 @@ class SendMessageConfiguration {
 
   /// Color of mic icon when replying to some voice message.
   final Color? micIconColor;
-
-  /// Styling configuration for recorder widget.
-  final VoiceRecordingConfiguration voiceRecordingConfiguration;
 
   /// Configuration for cancel voice recording
   final CancelRecordConfiguration? cancelRecordConfiguration;
@@ -246,7 +240,6 @@ class ImagePickerConfiguration {
     this.maxWidth,
     this.maxHeight,
     this.imageQuality,
-    this.preferredCameraDevice,
     this.onImagePicked,
   });
 
@@ -259,58 +252,9 @@ class ImagePickerConfiguration {
   /// Used to give image quality.
   final int? imageQuality;
 
-  /// Preferred camera device to pick image from.
-  final CameraDevice? preferredCameraDevice;
-
   /// Callback when image is picked from camera or gallery,
   ///  we can perform our task on image like adding crop options and return new image path
   final ImagePickedCallback? onImagePicked;
-}
-
-class VoiceRecordingConfiguration {
-  /// Styling configuration for the recorder widget as well as
-  /// configuring the audio recording quality.
-  const VoiceRecordingConfiguration({
-    this.recorderSettings = const RecorderSettings(),
-    this.waveStyle,
-    this.padding,
-    this.margin,
-    this.decoration,
-    this.backgroundColor,
-    this.micIcon,
-    this.recorderIconColor,
-    this.stopIcon,
-  });
-
-  /// Applies styles to waveform.
-  final WaveStyle? waveStyle;
-
-  /// Applies padding around waveform widget.
-  final EdgeInsets? padding;
-
-  /// Applies margin around waveform widget.
-  final EdgeInsets? margin;
-
-  /// Box decoration containing waveforms
-  final BoxDecoration? decoration;
-
-  /// If only background color needs to be changed then use this instead of
-  /// decoration.
-  final Color? backgroundColor;
-
-  /// An icon for recording voice.
-  final Widget? micIcon;
-
-  /// An icon for stopping voice recording.
-  final Widget? stopIcon;
-
-  /// Applies color to mic and stop icon.
-  final Color? recorderIconColor;
-
-  /// Configures audio recording settings for Android and iOS.
-  ///
-  /// Default is [RecorderSettings] with default values.
-  final RecorderSettings recorderSettings;
 }
 
 class CancelRecordConfiguration {

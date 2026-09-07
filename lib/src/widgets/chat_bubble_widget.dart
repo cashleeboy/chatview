@@ -31,7 +31,6 @@ import 'chat_view_inherited_widget.dart';
 import 'message_time_widget.dart';
 import 'message_view.dart';
 import 'profile_circle.dart';
-import 'reply_message_widget.dart';
 import 'swipe_to_reply.dart';
 
 class ChatBubbleWidget extends StatefulWidget {
@@ -262,17 +261,6 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                   ?.senderNameTextStyle,
             ),
           ),
-        if (replyMessage.isNotEmpty)
-          chatListConfig.repliedMessageConfig?.repliedMessageWidgetBuilder !=
-                  null
-              ? chatListConfig.repliedMessageConfig!
-                  .repliedMessageWidgetBuilder!(widget.message.replyMessage)
-              : ReplyMessageWidget(
-                  message: widget.message,
-                  repliedMessageConfig: chatListConfig.repliedMessageConfig,
-                  onTap: () => widget.onReplyTap
-                      ?.call(widget.message.replyMessage.messageId),
-                ),
         SwipeToReply(
           isMessageByCurrentUser: isMessageBySender,
           onSwipe: isMessageBySender ? onLeftSwipe : onRightSwipe,

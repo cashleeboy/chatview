@@ -1,4 +1,3 @@
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 
 import '../../../chatview.dart' show ChatView;
@@ -12,7 +11,6 @@ class EmojiPickerActionButton extends TextFieldActionButton {
     required super.icon,
     required EmojiPickerActionCallback? onPressed,
     required BuildContext context,
-    this.emojiPickerSheetConfig,
     this.height,
     super.key,
     super.color,
@@ -23,7 +21,6 @@ class EmojiPickerActionButton extends TextFieldActionButton {
               : (_) async {
                   final emoji = await _pickEmoji(
                     context: context,
-                    config: emojiPickerSheetConfig,
                     height: height,
                   );
                   if (emoji != null) {
@@ -35,14 +32,12 @@ class EmojiPickerActionButton extends TextFieldActionButton {
                 },
         );
 
-  final Config? emojiPickerSheetConfig;
   final double? height;
 
   /// Shows the emoji picker as a modal bottom sheet and
   /// returns the selected emoji.
   static Future<String?> _pickEmoji({
     BuildContext? context,
-    Config? config,
     double? height,
   }) async {
     if (context == null) return null;
@@ -50,7 +45,6 @@ class EmojiPickerActionButton extends TextFieldActionButton {
       context: context,
       builder: (newContext) => EmojiPickerWidget(
         height: height,
-        emojiPickerSheetConfig: config,
         onSelected: (emoji) => Navigator.pop<String>(context, emoji),
       ),
     );

@@ -17,15 +17,9 @@ environment:
 
 dependencies:
   any_link_preview: 3.0.3
-  audio_waveforms: 2.0.2
   cached_network_image: 3.4.1
   chatview_utils: 3.0.0
 
-  emoji_picker_flutter: 4.4.0
-  flutter:
-    sdk: flutter
-  image_picker: 1.2.2
-  intl: 0.20.2
   url_launcher: 6.3.2
 
   scroll_to_index: ^3.0.1

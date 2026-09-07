@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
-import '../../../chatview.dart' show ChatView;
 import '../../models/config_models/send_message_configuration.dart';
-import '../../utils/helper.dart';
 import '../../values/typedefs.dart';
 import 'text_field_action_button.dart';
 
@@ -20,15 +17,7 @@ class CameraActionButton extends TextFieldActionButton {
           onPressed: onPressed == null
               ? null
               : (context) async {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  final path = await onMediaActionButtonPressed(
-                    ImageSource.camera,
-                    config: imagePickerConfiguration,
-                  );
-                  final replyMessage = context.mounted
-                      ? ChatView.getReplyMessage(context)
-                      : null;
-                  onPressed.call(path, replyMessage);
+                  onPressed;
                 },
         );
 

@@ -31,7 +31,6 @@ import 'chat_view_inherited_widget.dart';
 import 'image_message_view.dart';
 import 'reaction_widget.dart';
 import 'text_message_view.dart';
-import 'voice_message_view.dart';
 
 class MessageView extends StatefulWidget {
   const MessageView({
@@ -232,17 +231,6 @@ class _MessageViewState extends State<MessageView>
                     highlightColor: widget.highlightColor,
                     highlightMessage: widget.shouldHighlight,
                     featureActiveConfig: chatViewIW?.featureActiveConfig,
-                  );
-                } else if (widget.message.messageType.isVoice) {
-                  return VoiceMessageView(
-                    screenWidth: MediaQuery.of(context).size.width,
-                    message: widget.message,
-                    config: messageConfig?.voiceMessageConfig,
-                    onMaxDuration: widget.onMaxDuration,
-                    isMessageBySender: widget.isMessageBySender,
-                    messageReactionConfig: messageConfig?.messageReactionConfig,
-                    inComingChatBubbleConfig: widget.inComingChatBubbleConfig,
-                    outgoingChatBubbleConfig: widget.outgoingChatBubbleConfig,
                   );
                 } else if (widget.message.messageType.isCustom &&
                     messageConfig?.customMessageBuilder != null) {
